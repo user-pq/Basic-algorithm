@@ -18,7 +18,7 @@ void Swap(int &a, int&b)
 }
 
 
-void SelectSort(int *arr, int num)
+void SelectSort(int *arr, const int& num)
 {
     if(arr == NULL || num < 2)
     {
@@ -36,7 +36,7 @@ void SelectSort(int *arr, int num)
 }
 
 
-void Print(int *arr, int num)
+void Print(const int *arr, const int& num)
 {
     for(int i=0; i<num; i++)
     {

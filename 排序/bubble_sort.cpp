@@ -19,7 +19,7 @@ void Swap(int &a, int&b)
 }
 
 
-void Print(int *arr, int num)
+void Print(const int *arr,const int& num)
 {
     for(int i=0; i<num; i++)
     {
@@ -29,7 +29,7 @@ void Print(int *arr, int num)
 }
 
 
-void BubbleSort(int *arr, int num)
+void BubbleSort(int *arr,const int& num)
 {
     if(arr == NULL || num < 2)
     {

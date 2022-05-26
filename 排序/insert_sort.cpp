@@ -6,8 +6,8 @@ N个数
 0 - 2 有序 此时0-1有序，位置2属于新增数， 判断位置2与1位置大小，位置1大于2则交换位置，交换后位置1大于位置0，则位置1和位置0交换位置
 ..
 ..
-0 - N 有序 此时0-N-1有序  N位置属于新增数 如果N-1位置存在数且小于N位置的数 交换！
-直到 0 - N 有序
+0 - N-1 有序 此时0-N-1有序  N位置属于新增数 如果N-1位置存在数且小于N位置的数 交换！
+直到 0 - N-1 有序
 */
 
 #include <iostream>
@@ -21,7 +21,7 @@ void Swap(int &a, int&b)
 }
 
 
-void Print(int *arr, int num)
+void Print(const int *arr, const int& num)
 {
     for(int i=0; i<num; i++)
     {
@@ -30,7 +30,7 @@ void Print(int *arr, int num)
     std::cout << std::endl;
 }
 
-void InsertSort(int *arr, int num)
+void InsertSort(int *arr, const int& num)
 {
     if(arr == NULL || num < 2)
     {
