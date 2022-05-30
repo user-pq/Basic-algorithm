@@ -1,6 +1,7 @@
 /**
  * 1、单链表的反转
  * 2、双链表的反转
+ * 3、K个节点的组内逆序调整
 */
 
 #include <iostream>
@@ -62,13 +63,82 @@ Node* ReverseDoubleList(Node* head)
     return pre;
 }
 
+// K个节点的组内逆序调整
+/**
+ * 给定一个单链表的头节点head和一个正数k
+ * 实现k个节点的小组内部逆序，如果最后一组不够k个就不调整
+ * eg:
+ * 调整前：1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 , k = 3 
+ * 调整后：3 -> 2 -> 1 -> 6 -> 5 -> 4 -> 7 -> 8
+ * 
+ * 思路：
+ * 1、找出需要反转部分的每一组的尾
+ * 2、对需要反转的部分进行反转
+ * 3、将链表连接起来
+*/
+
+// 找到需要反转的部分的组的尾
+Node * GetGroupEnd(Node* head, int k)
+{
+    while (--k != 0 && head != nullptr)
+    {
+        head = head->next_;
+    }
+    return head;
+}
+
+// 对当前组进行反转 
+void ReverseGroup(Node* head, Node* tail)
+{
+    tail = tail->next_;
+    Node* next = nullptr;
+    Node* pre = nullptr;
+    Node* cur = head;
+    while(cur != tail)
+    {
+        next = cur->next_;
+        cur->next_ = pre;
+        pre = cur;
+        cur = next;
+    }
+    head->next_ = tail;
+}
+
+Node *ReverseListByK(Node* head, int k)
+{
+    Node* begin = head;
+    Node* end = GetGroupEnd(head, k);
+    if(end == nullptr)
+    {
+        return head;
+    }
+    head = end;
+    ReverseGroup(begin, end);
+    Node* last_end = begin;
+    while(last_end != nullptr)
+    {
+        begin = last_end->next_;
+        end = GetGroupEnd(begin, k);
+        if(end == nullptr)
+        {
+            return head;
+        }
+        ReverseGroup(begin, end);
+        last_end->next_ = end;
+        last_end = begin;
+    }
+    return head;
+}
+
+
 
 int main()
 {
     Node *head = new Node(1);
     head->next_ = new Node(2);
     head->next_->next_ = new Node(3);
-
+    head->next_->next_->next_ = new Node(4);
+    head->next_->next_->next_->next_ = new Node(5);
     PrintList(head);
     head = ReverseList(head);
     PrintList(head);
@@ -84,11 +154,15 @@ int main()
     d_list_1->pre_ = d_head;
     d_list_2->pre_ = d_list_1;
     d_list_2->next_ = nullptr;
-
     PrintList(d_head);
     d_head = ReverseDoubleList(d_head);
     PrintList(d_head);
 
+    std::cout << "----------------" << std::endl;
+
+    PrintList(head);
+    auto test = ReverseListByK(head, 3);
+    PrintList(test);
     return 0;
 
 }
