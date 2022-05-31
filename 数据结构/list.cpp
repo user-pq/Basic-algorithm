@@ -2,6 +2,7 @@
  * 1、单链表的反转
  * 2、双链表的反转
  * 3、K个节点的组内逆序调整
+ * 4、两个链表相加以后倒序
 */
 
 #include <iostream>
@@ -130,7 +131,64 @@ Node *ReverseListByK(Node* head, int k)
     return head;
 }
 
+// 两个链表相加以后倒序
+/**
+思路：
+1、 对比两个链表的长度，重定向两个链表 长（L） 短（S）
+2、 分三种情况
+    1、 L有 S有
+    2、 L有 S无
+    3、 L无 S无
+*/
 
+int ListLength(Node* head)
+{
+    int length = 0;
+    while(head != nullptr)
+    {
+        head = head->next_;
+        length++;
+    }
+    return length;
+}
+
+
+Node* AddTwoNumbers(Node* head1, Node* head2)
+{
+    int length1 = ListLength(head1);
+    int length2 = ListLength(head2);
+
+    Node* L = length1 > length2 ? head1 : head2;
+    Node* S = length1 > length2 ? head2 : head1;
+
+    Node* curl = L;
+    int carry = 0;  // 进位标志
+    int curnum = 0; // 两个数、进位标志之和
+    Node* last = curl; // 记录链表最后的指向，用于需要添加链表时的连接
+    // 累加的值直接放到长链表里边 节约空间 多出来的部分创建一个结点加进去
+    while(S != nullptr)  // 第一阶段 都不为空
+    {
+        curnum = S->data_ + curl->data_ + carry;
+        curl->data_ = curnum % 10;
+        carry = curnum / 10;
+        last = curl;
+        curl = curl->next_;
+        S = S->next_;
+    }
+    while(curl != nullptr)  // 第二阶段 S为空 L不为空
+    {
+        curnum = curl->data_ + carry;
+        curl->data_ = curnum % 10;
+        carry = curnum / 10;
+        last = curl;
+        curl = curl->next_;
+    }
+    if(carry != 0) // 第三阶段 都为空，查看进位标志
+    {
+        last->next_ = new Node(1);
+    }
+    return L;
+}
 
 int main()
 {
@@ -163,6 +221,26 @@ int main()
     PrintList(head);
     auto test = ReverseListByK(head, 3);
     PrintList(test);
+    
+    std::cout << "----------------" << std::endl;
+
+    Node *head1 = new Node(1);
+    head1->next_ = new Node(2);
+    head1->next_->next_ = new Node(3);
+    head1->next_->next_->next_ = new Node(4);
+    head1->next_->next_->next_->next_ = new Node(5);
+    PrintList(head1);
+
+    Node *head2 = new Node(1);
+    head2->next_ = new Node(2);
+    head2->next_->next_ = new Node(3);
+    PrintList(head2);
+
+    head1 = AddTwoNumbers(head1, head2);
+    PrintList(head1);
+    head1 = ReverseList(head1);
+    PrintList(head1);
+
     return 0;
 
 }
